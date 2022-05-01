@@ -445,9 +445,9 @@ class DB:
 		"""
 		debug("""WARNING: Use db.update unless you know what you are doing.
 
-db.put will delete and replace all existing data for this record, 
-while db.update() will create a new record or safely update existing.
-""")
+		db.put will delete and replace all existing data for this record, 
+		while db.update() will create a new record or safely update existing.
+		""")
 
 		key = convert_key(key, self.PK, self.SK)
 		# debug(f"key: {key}") #> {'PK': 'magic', 'SK': 'one'}
@@ -806,6 +806,9 @@ def create_table(
 		WriteCapacityUnits=5,
 	):
 	""" Manually run function: Create a new dynamo db table in aws
+		
+		>>> from pynamite import dynamo
+		>>> db = dynamo.create_table()
 	"""
 
 	# assert table_name, "ERROR: create_table() -> arg `table_name` is required to create a table."

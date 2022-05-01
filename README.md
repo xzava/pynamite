@@ -158,6 +158,7 @@ So a user can query all bookmarks from a user in one command, ie get all records
 
 ```python
 >>> from pynamite import dynamo
+>>> from pynamite.expression import Increment, Decrement, SetRemove
 
 # Connect to existing DynamoDB table named 'youtubeclone.com'
 >>> db = dynamo.DB('youtubeclone.com')
@@ -199,7 +200,7 @@ So a user can query all bookmarks from a user in one command, ie get all records
 >>> db.update(["VIDEO", "#VID_15464279"], {"Title": "How to make soup", "views": 0, "author": "ACC_15464279", "channel": "penny_makes_things"})
 
 # Increment channel attr videos plus 1
->>> db.update(["CHANNEL", "#ACTIVE#ACC_15464279"], {"videos": Increment("videos")})
+>>> db.update(["CHANNEL", "#penny_makes_things"], {"videos": Increment("videos")})
 
 # User video gets 3 views
 >>> db.update(["VIDEO", "#VID_15464279"], {"views": Increment("views")})
@@ -207,25 +208,27 @@ So a user can query all bookmarks from a user in one command, ie get all records
 >>> db.update(["VIDEO", "#VID_15464279"], {"views": Increment("views")})
 
 # User gets two subscribers, update their channel model
->>> db.update(["CHANNEL", "#ACTIVE#ACC_15464279"], {"subscribers": Increment("subscribers")})
->>> db.update(["CHANNEL", "#ACTIVE#ACC_15464279"], {"subscribers": Increment("subscribers")})
+>>> db.update(["CHANNEL", "#penny_makes_things"], {"subscribers": Increment("subscribers")})
+>>> db.update(["CHANNEL", "#penny_makes_things"], {"subscribers": Increment("subscribers")})
 
 # Get video information
 >>> db.get(["VIDEO", "#VID_15464279"])
 {
-	"PK": "VIDEO",
-	"SK": "#VID_15464279",
-	"firstname":"Penny",
-	"channel": "penny_makes_things",
-	"author": "VID_15464279"
-	"email": "penny@example.com",
-	"_created": "2022-04-02T10:52:04.976474",
-	"_updated": "2022-04-02T10:58:03.172424"
+    'PK': 'VIDEO',
+    'SK': '#VID_15464279',
+    'Title': 'How to make soup',
+    'views': Decimal('3'),
+    'channel': 'penny_makes_things',
+    'author': 'ACC_15464279'
+    "_created": "2022-04-02T10:52:04.976474",
+    "_updated": "2022-04-02T10:58:03.172424"
 }
 
 # Get channel information
 >>> db.get("CHANNEL.#penny_makes_things")
 {
+  "PK": "CHANNEL",
+  "SK": "#penny_makes_things",
 	"author": "ACC_15464279", 
 	"videos": 1, 
 	"subscribers": 2,
@@ -238,9 +241,10 @@ So a user can query all bookmarks from a user in one command, ie get all records
 >>> db.update("VIDEO.#VID_15464279", {
 	"__shadow_ban_level": {"MODERATE"}
 })
+{'__shadow_ban_level': {'MODERATE'}, '_updated': '2022-05-01T23:14:48.210980'}
 
 # Elon Musk buys company
->>> db.update("VIDEO.#VID_15464279", {"__shadow_ban_level": SetRemove("MODERATE")}, ReturnValues="ALL_NEW")
+>>> db.update("VIDEO.#VID_15464279", {"__shadow_ban_level": SetRemove("__shadow_ban_level", "MODERATE")})
 {
 	"__shadow_ban_level": {}
 }

@@ -42,3 +42,22 @@ aws dynamodb get-item \
 
 
 `CHANGE`: replace_between() function has been written
+
+
+------------
+------------
+------------
+------------
+
+`DATE`: 02.05.22 - 
+`PROBLEM`: Missing _created key when using update and a record doesnt exist.
+`STAUS`: In progress
+`DETAILS`: 
+
+Should add IfNotExists("_created")
+
+and '_updated' should be blank
+
+>>> db.get("USER.#ACTIVE#ACC_45438981")
+{'_updated': '2022-05-01T23:01:52.470557', 'firstname': 'John', 'SK': '#ACTIVE#ACC_45438981', 'PK': 'USER', 'email': 'john@example.com', 'verified': True}
+

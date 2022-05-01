@@ -198,7 +198,24 @@ class SetRemove(ExpressionBase):
 		More info on how to fix this problem can be found here.
 		https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Expressions.UpdateExpressions.html
 	"""
-	# Note this is not finished as you can't do the same as above as its under SET and joining commands doesn't have a commar.
+
+	"""
+
+	CURRENT: DELETE #0169182500 :SR_0169182500 #0169182500 SET #9293253196=:0510772436
+
+	EXPECTED: DELETE #0169182500 :SR_0169182500, SET #9293253196=:0510772436
+
+
+	>>> d = SetRemove("example", "one")
+	>>> d.build()
+	':SR_6551699817 example'
+
+
+	>>> expression.update({"one": expression.SetRemove("key", "two")})
+	'DELETE #7513818127 = :SR_1707883424'
+
+	"""
+	# Note this is not finished as you can't do the same as above as its under SET and joining commands do not have a commar.
 	def __init__(self, key, value):
 		self.action = "DELETE"
 		self.key = key
@@ -860,6 +877,11 @@ def update(data):
 
 		>>> import importlib;importlib.reload(expression)
 		>>> db.update("example.hello", {"dict_example.hello.b[1]": "B"})
+
+
+
+		>>> expression.update({"one": expression.SetRemove("key", "two")})
+		'DELETE #7513818127 = :SR_1707883424'
 
 
 	"""

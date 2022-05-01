@@ -401,13 +401,13 @@ def confirm_dialog(action, warning="You are attempting to do something that need
 
 	"""
 	warning = action if action else warning
-	debug("")
-	debug(f"Please Confirm.. '{action}'")
-	debug("")
-	debug(f"WARNING: {warning}")
+	print("")
+	print(f"Please Confirm.. '{action}'")
+	print("")
+	print(f"WARNING: {warning}")
 	confirm = input("Enter 'YES' to continue or 'NO' to exit safely: ").lower().strip()
-	debug(f"User entered: {confirm} - {action}")
-	debug("")
+	print(f"User entered: {confirm} - {action}")
+	print("")
 	if confirm in {"y", "yes", "1", "true", "confirm", "affirmative", "okay", "yeah", "yip", "ye", "aprove"}:
 		return True
 	raise ValueError(f"Action: '{action}' not approved by user.")
