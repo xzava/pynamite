@@ -25,13 +25,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Currently fixing dynamo_expression_update to allow more methods
 
-## [1.1.0] - 2019-02-15
+## [0.0.1] - 2022-05-02 (yyyy-mm-dd)
 
 ### Added
 
-- ... [@xzava](https://github.com/xzava).
-- ... [@xzava](https://github.com/xzava).
-- ...
+- First commit [@xzava](https://github.com/xzava).
+- Tested pip install from github [@xzava](https://github.com/xzava).
 
 ### Changed
 

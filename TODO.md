@@ -1,11 +1,11 @@
 TODO.md
 
 
-[ ] Upload to git 
+[x] Upload to git 
 	[x] find a good name
 	[x] make sure no secrets are passed
 	[x] write readme
-	[ ] ensure you can pip install - pip install git+https://github.com/xzava/pynamite.git --upgrade
+	[x] ensure you can pip install - pip install git+https://github.com/xzava/pynamite.git --upgrade
 
 [ ] Write some simple tests
 

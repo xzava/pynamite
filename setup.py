@@ -19,7 +19,7 @@ setup(name='pynamite',
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License"
       ],
-      install_requires=['boto3'],
+      install_requires=['boto3', 'cachetools'],
       python_requires='>=3.8',
       extras_require={
         'gpu': ["pyopencl", "six"],

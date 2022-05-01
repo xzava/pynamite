@@ -33,6 +33,8 @@
 
 # https://dynobase.dev/dynamodb-python-with-boto3/
 
+print("pynamite version 0.0.1")
+
 from os import getenv
 from decimal import Decimal
 import decimal 

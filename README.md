@@ -14,7 +14,9 @@ Library is built around single table design, and tries to keep the boto3 dynamod
 
 ## Project status - Alpha
 
-Used in production, with a very narrow scope. Things within the scope work very well things outside of the scope require your feedback.
+Used in production, with a very narrow scope. Things within the scope work very well. 
+
+While things outside of the scope require your user feedback.
 
 
 ### Installation
