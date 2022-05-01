@@ -7,7 +7,7 @@ Library is built around single table design, and tries to keep the boto3 dynamod
 
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/xzava/pynanite/master/docs/images/wile.jpg">
+  <img src="https://raw.githubusercontent.com/xzava/pynamite/main/docs/images/wile.jpg">
 </p>
 
 
@@ -66,7 +66,7 @@ source ~/.aws_key_location.sh
 ##### Bookmark Datamodel
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/xzava/pynanite/master/docs/images/bookmarks_data_model.png">
+  <img src="https://raw.githubusercontent.com/xzava/pynanite/main/docs/images/bookmarks_data_model.png">
 </p>
 
 ```python
@@ -150,7 +150,7 @@ So a user can query all records from user "123" that start with "URL#"
 ##### Datamodel for a cloud video service
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/xzava/pynanite/master/docs/images/youtubeclone_data_model.png">
+  <img src="https://raw.githubusercontent.com/xzava/pynanite/main/docs/images/youtubeclone_data_model.png">
 </p>
 
 ```python
@@ -275,7 +275,7 @@ pprint(db.update('example.hello', {'count': dynamo.Increment('count')}))
 ## Modelling with AWS nosql work bench
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/xzava/pynanite/master/docs/images/tabledesign_style.png">
+  <img src="https://raw.githubusercontent.com/xzava/pynanite/main/docs/images/tabledesign_style.png">
 </p>
 
 
