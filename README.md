@@ -1,9 +1,11 @@
 > README.md
 
 
-# Python Wrapper for the boto3 dynamoDB library
+# PYNAMITE: Python Wrapper for the AWS boto3 dynamoDB library
 
-Library is built around single table design, and tries to keep the boto3 dynamodb interface, just without the bloat.
+Pynamite is a library is built around single table design, and tries to keep the boto3 dynamodb interface, just without the bloat.
+
+Dynamodb is a nosql database service by AWS. Its fast key/value store is highly scalable and ideal for read heavy databases when you know the access patterns.
 
 
 <p align="center">
@@ -12,7 +14,7 @@ Library is built around single table design, and tries to keep the boto3 dynamod
 
 
 
-## Project status - Alpha
+## Project status - Alpha (as of May 2 2022)
 
 Used in production, with a very narrow scope. Things within the scope work very well. 
 
@@ -34,28 +36,18 @@ python setup.py develop
 
 Next, set up credentials (in e.g. ~/.aws_key_location):
 
-```
-[default]
-aws_access_key_id = YOUR_KEY
-aws_secret_access_key = YOUR_SECRET
-Then, set up a default region (in e.g. ~/.aws/config):
-
-[default]
-region=us-east-1
-
-```
-
 ```sh
 # ~/aws_key_location.sh
 
-# Required Config..
+# REQUIRED..
 export AWS_ACCESS_KEY_ID='YOUR_KEY'
 export AWS_SECRET_ACCESS_KEY='YOUR_SECRET'
 export DYNAMO_REGION='YOUR REGION'
 
-# Optional Config..
-export DYNAMO_TABLE_NAME='TABLE NAME' 
+# OPTIONAL..
+export DYNAMO_TABLE_NAME='TABLE_NAME' 
 export DEBUG='DEBUG'
+export region='us-east-1'
 ```
 
 ```bash
@@ -68,8 +60,10 @@ source ~/.aws_key_location.sh
 ##### Bookmark Datamodel
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/xzava/pynanite/main/docs/images/bookmarks_data_model.png">
+  <img src="https://raw.githubusercontent.com/xzava/pynamite/main/docs/images/bookmarks_data_model.png">
 </p>
+
+Note: Set the DEBUG env to 'DEBUG' to show the verbose messages from pynamite. `export DEBUG='DEBUG'`
 
 ```python
 
@@ -152,7 +146,7 @@ So a user can query all records from user "123" that start with "URL#"
 ##### Datamodel for a cloud video service
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/xzava/pynanite/main/docs/images/youtubeclone_data_model.png">
+  <img src="https://raw.githubusercontent.com/xzava/pynamite/main/docs/images/youtubeclone_data_model.png">
 </p>
 
 ```python
@@ -277,7 +271,7 @@ pprint(db.update('example.hello', {'count': dynamo.Increment('count')}))
 ## Modelling with AWS nosql work bench
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/xzava/pynanite/main/docs/images/tabledesign_style.png">
+  <img src="https://raw.githubusercontent.com/xzava/pynamite/main/docs/images/tabledesign_style.png">
 </p>
 
 
