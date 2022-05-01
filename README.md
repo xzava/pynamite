@@ -135,10 +135,10 @@ Use the above image as a reference
 
 #### Note: 
 
-The last example `db.get("321.CUST#321", "userPreferences.gpsLocation")` you are requesting a filter from AWS
-They process this filter found data for the key `"userPreferences.gpsLocation"` 
+The last example `db.get("321.CUST#321", "userPreferences.gpsLocation")` you are requesting a filter from AWS.
+They process this filter on all data found matching the lookup `"321.CUST#321"`
 
-They do the filtering AFTER they have read the record(s). In this case nothing is returned, however you still  get charged the same amount compared to requesting the full record.
+In this case nothing is returned, however you still get charged the same amount compared to requesting the full record because they do the filtering AFTER they have read the record(s).
 
 The benefit is bandwidth/network traffic, and they also might be able to filter the keys quicker than you can.
 
