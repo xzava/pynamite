@@ -14,7 +14,7 @@ Dynamodb is a nosql database service by AWS. Its fast key/value store is highly 
 
 
 
-## Project status - Alpha (as of May 2 2022)
+## Project status - Alpha (as of 2nd May 2022)
 
 Used in production, with a very narrow scope. Things within the scope work very well. 
 
@@ -43,10 +43,10 @@ Next, set up credentials (in e.g. ~/.aws_key_location):
 export AWS_ACCESS_KEY_ID='YOUR_KEY'
 export AWS_SECRET_ACCESS_KEY='YOUR_SECRET'
 export DYNAMO_REGION='YOUR REGION'
+export DEBUG='DEBUG'
 
 # OPTIONAL..
 export DYNAMO_TABLE_NAME='TABLE_NAME' 
-export DEBUG='DEBUG'
 export region='us-east-1'
 ```
 
@@ -54,6 +54,7 @@ export region='us-east-1'
 source ~/.aws_key_location.sh
 ```
 
+Note: Set the DEBUG env to 'DEBUG' to show the verbose messages from pynamite. `export DEBUG='DEBUG'`
 
 ### QUICK EXAMPLE
 
@@ -63,7 +64,7 @@ source ~/.aws_key_location.sh
   <img src="https://raw.githubusercontent.com/xzava/pynamite/main/docs/images/bookmarks_data_model.png">
 </p>
 
-Note: Set the DEBUG env to 'DEBUG' to show the verbose messages from pynamite. `export DEBUG='DEBUG'`
+Use the above image as a reference
 
 ```python
 
@@ -122,10 +123,11 @@ Note: Set the DEBUG env to 'DEBUG' to show the verbose messages from pynamite. `
   }
 ]
 
-
+# Note: Here we are using dot notation to seperate the PK and SK 
 >>> db.get("321.CUST#321", "userPreferences.language")
 {'userPreferences': {'language': 'zh'}}
 
+# This key doesn't exist, nothing is returned.
 >>> db.get("321.CUST#321", "userPreferences.gpsLocation")
 {}
 ```
@@ -133,12 +135,17 @@ Note: Set the DEBUG env to 'DEBUG' to show the verbose messages from pynamite. `
 
 #### Note: 
 
-The last example, you are requesting a filter from AWS, they process this after they have read the record. So you get charged the same amount compared to requesting the full record. The benefit is bandwidth/network traffic.
+The last example `db.get("321.CUST#321", "userPreferences.gpsLocation")` you are requesting a filter from AWS
+They process this filter found data for the key `"userPreferences.gpsLocation"` 
+
+They do the filtering AFTER they have read the record(s). In this case nothing is returned, however you still  get charged the same amount compared to requesting the full record.
+
+The benefit is bandwidth/network traffic, and they also might be able to filter the keys quicker than you can.
 
 #### Pro tip: 
 
-This datamodel the "SK" should ideally be "URL#https://aws.amazon.com"
-So a user can query all records from user "123" that start with "URL#" 
+This datamodel the "SK" should ideally be "URL#https://aws.amazon.com" rather than "https://aws.amazon.com"
+So a user can query all bookmarks from a user in one command, ie get all records for user "123" with a sort key that starts with "URL#" 
 
 
 ### USAGE
@@ -297,14 +304,16 @@ create_nosql_workbench(filename="table.json")
 
 ## Why use dynamo from pynamite
 
-boto3 is heavy and hard to learn, this library acts as a wrapper keeping the same interface but keeping it simple.
+boto3 and dynamoDB in general is heavy and hard to learn, this library acts as a wrapper using the same interface but keeping it simple.
 
 You can interact with the DynamoDB like python dict, meaning you can get things up and running quicker.
 
-Other libraies focus on adhock .query and .scan, DynamoDB is not SQL using these transactions should be the exception.
+Other libraries focus on adhock .query and .scan which is NOT how dynamodb is meant to be used.
+
+DynamoDB is not a SQL database using these .query() and especially .query() should be the exception and not the norm.
 IE access patterns should be built into the datamodel, and GSI (Global Secondary index) should be used for common read heavy access patterns.
 
-This library supports single table design, and nosql style data modelling.
+This library supports single table design, and nosql style data modeling.
 
 
 ## Future changes
@@ -313,7 +322,7 @@ This library supports single table design, and nosql style data modelling.
 
 - Add datamodel support, likly using attrs
 
-- Add callback transactions, ie if a video record is added automaticlly update the channel record to increment "videos" dynamoDB supports this use case using lambda functions
+- Add callback transactions, ie if a video record is added automatically update the channel record to increment "videos" dynamoDB supports this use case using lambda functions
 
 - Add a video showing examples, one thing I had trouble was finding dynamoDB example functions.
 
