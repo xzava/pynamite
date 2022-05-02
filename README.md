@@ -1,7 +1,7 @@
 > README.md
 
 
-# PYNAMITE: Python Wrapper for the AWS boto3 dynamoDB library
+# PYNAMITE: Python dynamoDB library
 
 Pynamite is a dynamodb library is focusing on single table design, it keeps the basic boto3 interface, without the bloat.
 
