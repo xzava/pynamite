@@ -55,7 +55,7 @@ def debug(*args, pretty=False):
 		REQUIRES:
 		from pprint import pprint
 	"""
-	if getenv("DEBUG") in ["1", 1, "True", "DEBUG", "TRUE", "true", "debug", "Debug"]:
+	if (getenv("DEBUG") or "").lower() in ["1", 1, "true", "debug", "development"]:
 		if pretty is True:
 			from pprint import pprint
 			pprint(*args)

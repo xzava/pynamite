@@ -61,3 +61,25 @@ and '_updated' should be blank
 >>> db.get("USER.#ACTIVE#ACC_45438981")
 {'_updated': '2022-05-01T23:01:52.470557', 'firstname': 'John', 'SK': '#ACTIVE#ACC_45438981', 'PK': 'USER', 'email': 'john@example.com', 'verified': True}
 
+
+
+------------
+------------
+------------
+------------
+
+
+`DATE`: 02.05.22 
+`PROBLEM`: expression SetRemove is not working
+`STAUS`: In progress
+`DETAILS`: 
+
+Should be the following
+
+>>> from pynamite import expression
+>>> expression.update({"one": expression.SetRemove("key", "two")})
+'DELETE #7513818127 = :SR_1707883424'
+
+But is currently this 
+
+'SET #7513818127 = :SR_1707883424 #7513818127'

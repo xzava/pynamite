@@ -3,7 +3,7 @@
 
 # PYNAMITE: Python Wrapper for the AWS boto3 dynamoDB library
 
-Pynamite is a library is built around single table design, and tries to keep the boto3 dynamodb interface, just without the bloat.
+Pynamite is a dynamodb library is focusing on single table design, it keeps the basic boto3 interface, without the bloat.
 
 Dynamodb is a nosql database service by AWS. Its fast key/value store is highly scalable and ideal for read heavy databases when you know the access patterns.
 
@@ -16,9 +16,9 @@ Dynamodb is a nosql database service by AWS. Its fast key/value store is highly 
 
 ## Project status - Alpha (as of 2nd May 2022)
 
-Used in production, with a very narrow scope. Things within the scope work very well. 
+Used in production, with a narrow scope. Things within the scope work very well, see TODO.md
 
-While things outside of the scope require your user feedback.
+Help improve this project with your feedback.
 
 
 ### Installation
@@ -43,7 +43,7 @@ Next, set up credentials (in e.g. ~/.aws_key_location):
 export AWS_ACCESS_KEY_ID='YOUR_KEY'
 export AWS_SECRET_ACCESS_KEY='YOUR_SECRET'
 export DYNAMO_REGION='YOUR REGION'
-export DEBUG='DEBUG'
+export DEBUG='development'
 
 # OPTIONAL..
 export DYNAMO_TABLE_NAME='TABLE_NAME' 
@@ -54,7 +54,7 @@ export region='us-east-1'
 source ~/.aws_key_location.sh
 ```
 
-Note: Set the DEBUG env to 'DEBUG' to show the verbose messages from pynamite. `export DEBUG='DEBUG'`
+Note: Set the DEBUG env to 'development' to show verbose messages.
 
 ### QUICK EXAMPLE
 
@@ -64,7 +64,7 @@ Note: Set the DEBUG env to 'DEBUG' to show the verbose messages from pynamite. `
   <img src="https://raw.githubusercontent.com/xzava/pynamite/main/docs/images/bookmarks_data_model.png">
 </p>
 
-Use the above image as a reference
+Open the above image in a new tab for the full size.
 
 ```python
 
@@ -136,7 +136,7 @@ Use the above image as a reference
 #### Note: 
 
 The last example `db.get("321.CUST#321", "userPreferences.gpsLocation")` you are requesting a filter from AWS.
-They process this filter on all data found matching the lookup `"321.CUST#321"`
+They process this filter on all data found matching the lookup `321.CUST#321`
 
 In this case nothing is returned, however you still get charged the same amount compared to requesting the full record because they do the filtering AFTER they have read the record(s).
 
@@ -144,7 +144,7 @@ The benefit is bandwidth/network traffic, and they also might be able to filter 
 
 #### Pro tip: 
 
-This datamodel the "SK" should ideally be "URL#https://aws.amazon.com" rather than "https://aws.amazon.com"
+This datamodel the "SK" should ideally be `URL#https://aws.amazon.com` rather than `https://aws.amazon.com`
 So a user can query all bookmarks from a user in one command, ie get all records for user "123" with a sort key that starts with "URL#" 
 
 
@@ -307,6 +307,9 @@ create_nosql_workbench(filename="table.json")
 
 
 ## Why use dynamo from pynamite
+
+- Interface
+- aws expression magic
 
 boto3 and dynamoDB in general is heavy and hard to learn, this library acts as a wrapper using the same interface but keeping it simple.
 
