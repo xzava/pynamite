@@ -15,3 +15,5 @@ __private.py
 .env
 data
 .pytest_cache
+*.kra
+*wile2.jpg

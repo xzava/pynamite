@@ -9,7 +9,7 @@ Dynamodb is a nosql database service by AWS. Its fast key/value store is highly 
 
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/xzava/pynamite/main/docs/images/wile.jpg">
+  <img src="https://raw.githubusercontent.com/xzava/pynamite/main/docs/images/wile.png">
 </p>
 
 
