@@ -454,3 +454,12 @@ python setup.py develop --uninstall
 
 python setup.py develop easy_install pynamite[testing]
 ```
+
+
+```
+pip install git+https://github.com/xzava/pynamite.git --upgrade
+pip uninstall pynamite
+
+python setup.py develop --uninstall
+
+```
