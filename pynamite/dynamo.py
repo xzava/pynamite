@@ -58,11 +58,17 @@ from pynamite.utils import first, second, get_index
 from pynamite.utils import convert_key, confirm_dialog, _load_key_schema, remove_meta
 from pynamite.utils import debug
 
-import pynamite.expression as expression
 
-import pynamite.utils as utils
+from pynamite.utils import test_this
+
+from pynamite import utils
+from pynamite import expression
+# import pynamite.utils as utils
+# import pynamite.expression as expression
 
 logger = logging.getLogger(__name__)
+
+
 
 "################"
 "#     DOCS     #"
@@ -96,9 +102,18 @@ DB:
   delete(
   get_partition(
 
-table_connection(
+table_connection(_
 
-
+describe_all()
+dynamo_connection()
+table_connection()
+list_tables()
+create_table()
+show_schema()
+show_partition()
+query()
+user_get_attrs()
+collect_expression()
 
 
 """
@@ -108,12 +123,14 @@ table_connection(
 "############################"
 
 """
-
 https://github.com/pynamodb/PynamoDB
 https://github.com/stevearc/flywheel
 https://github.com/serebrov/dynamo_objects
-
 """
+
+"#####################"
+"#     RESOURSES     #"
+"#####################"
 
 
 # https://www.bmc.com/blogs/dynamodb-advanced-queries/
@@ -124,12 +141,99 @@ https://github.com/serebrov/dynamo_objects
 	TODO: add advanced get for assuming `get_partition`
 	TODO: add support for queries
 	TODO: make async --> https://pypi.org/project/aioboto3/
-	DONE: add support for increment  "set example.count = example.count + :n"
 	TODO: Look into download_as and upload_as
+	
+	DONE: add support for increment  "set example.count = example.count + :n"
+
 """
 
+# Default dynamodb return
 RETURN_VALUES="UPDATED_NEW"
+
+# Update records with metadata
 METADATA=True
+
+# Update this by using dynamo.DEFAULT_META = ['timestamp', '__staging__']
+DEFAULT_META = getenv("DEFAULT_META", "") or [
+	'updated',
+	'updated_iso',
+	'created',
+	'timestamp',
+	'created_iso',
+	'__updated',
+	'__updated_iso',
+	'__created',
+	'__created_iso',
+	'_timestamp',
+	'__timestamp',
+	'_updated',
+	'_updated_iso',
+	'_created',
+	'_created_iso',
+	'PK',
+	'SK'
+]
+
+def remove_meta(data, ignore=None, custom_meta=None):
+	""" Quick function to remove meta information from db.get() returns
+
+		data: dict
+		ignore: list
+		custom_meta: list
+
+		EXAMPLES:
+			>>> from pynamite import dynamo
+			>>> import importlib;importlib.reload(dynamo)
+			>>> dynamo.remove_meta({"timestamp": 1283920324})
+			{}
+			
+			>>> dynamo.DEFAULT_META = ['timestamp', '__staging__']
+			>>> dynamo.remove_meta({"timestamp": 1283920324, '__production__': 'PRODUCTION'})
+			{'__production__': 'PRODUCTION'}
+			
+			>>> dynamo.DEFAULT_META = ['one']
+			>>> dynamo.remove_meta({"timestamp": 1283920324, '__production__': 'PRODUCTION'})
+			{"timestamp": 1283920324, '__production__': 'PRODUCTION'}
+			
+			>>> dynamo.DEFAULT_META = 'one,__production__'
+			>>> dynamo.remove_meta({"timestamp": 1283920324, '__production__': 'PRODUCTION'})
+			{"timestamp": 1283920324}
+
+
+	"""
+	if custom_meta is None:
+		debug("remove_meta: using system defined default_meta")
+		debug("create your own by dynamo.default_meta = ['timestamp']")
+
+	default_meta = custom_meta if custom_meta else DEFAULT_META
+
+	if isinstance(default_meta, str):
+		default_meta = default_meta.split(",")
+
+	ingore_list = default_meta + ignore if ignore else default_meta
+	
+	if isinstance(data, list):
+		return [remove_keys(e, ingore_list) for e in data]
+	return remove_keys(data, ingore_list)
+
+
+def test_this(custom_meta=None):
+	"""
+
+	>>> from pynamite import dynamo
+	>>> import importlib;importlib.reload(dynamo)
+	>>> dynamo.test_this()
+	>>> dynamo.DEFAULT_META = ['timestamp', '__staging__']
+	>>> dynamo.test_this()
+	>>> dynamo.DEFAULT_META = ['one']
+	>>> dynamo.test_this()
+	>>> dynamo.DEFAULT_META = 'one,two'
+
+	"""
+	default_meta = custom_meta if custom_meta else DEFAULT_META
+	if isinstance(default_meta, str):
+		default_meta = default_meta.split(",")
+	print(default_meta)
 
 
 class DB:
@@ -622,13 +726,13 @@ class DB:
 
 		https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb.html#DynamoDB.Client.scan
 		"""
-		debug("", 'WARNING: This function is returning a full database record.')
+		debug("", 'WARNING: This function is returning/reading a full database record (expensive).')
 		if confirm is False:
 			debug('Please confirm: use db.scan(confirm=True)')
 			return None
 
 		try:
-			result = self.table.scan()
+			result = self.table.scan(**kwargs)
 			return result['Items']
 		except KeyError as e:
 			_error_name = error_name(e)

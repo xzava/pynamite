@@ -48,6 +48,7 @@ export DEBUG='development'
 # OPTIONAL..
 export DYNAMO_TABLE_NAME='TABLE_NAME' 
 export region='us-east-1'
+
 ```
 
 ```bash
@@ -238,18 +239,26 @@ So a user can query all bookmarks from a user in one command, ie get all records
 }
 
 # User is naughty..
->>> db.update("VIDEO.#VID_15464279", {
-	"__shadow_ban_level": {"MODERATE"}
-})
-{'__shadow_ban_level': {'MODERATE'}, '_updated': '2022-05-01T23:14:48.210980'}
+>>> db.update("VIDEO.#VID_15464279", {"__shadow_ban_level": {"MODERATE"}})
+{
+  '__shadow_ban_level': {'MODERATE'},
+  '_updated': '2022-05-01T23:14:48.210980'
+}
+
+# TODO: Finish SetRemove
 
 # Elon Musk buys company
->>> db.update("VIDEO.#VID_15464279", {"__shadow_ban_level": SetRemove("__shadow_ban_level", "MODERATE")})
+>>> db.update("VIDEO.#VID_15464279", {"__shadow_ban_level": dynamo.SetRemove("__shadow_ban_level", "MODERATE")})
 {
 	"__shadow_ban_level": {}
 }
+
+
+>>> dynamo.show_schema(db)
 ```
 
+
+## Increment / Decrement
 
 ```python
 
@@ -258,10 +267,10 @@ from pprint import pprint
 
 db = dynamo.DB('USER')
 
-db.put('example.hello', {'count': 0})
+db.put('example.record', {'count': 0})
 # {'PK': 'example', 'SK': 'hello', 'size': 132}
 
-example = db.get('example.hello')
+example = db.get('example.record')
 pprint(example)
 # {
 #     'SK': 'hello',
@@ -271,13 +280,56 @@ pprint(example)
 #     '_updated': '2022-04-14T00:52:29.862785'
 # }
 
-pprint(db.update('example.hello', {'count': dynamo.Increment('count')}))
-# {'_updated': '2022-04-14T00:55:21.683986', 'count': Decimal('1')}
-pprint(db.update('example.hello', {'count': dynamo.Increment('count')}))
-# {'_updated': '2022-04-14T01:05:23.290422', 'count': Decimal('2')}
+pprint(dynamo.remove_meta(example))
+# {
+#     'count': Decimal('0'),
+# }
 
+pprint(db.update('example.record', {'count': dynamo.Increment('count')}))
+# {'_updated': '2022-04-14T00:55:21.683986', 'count': Decimal('1')}
+pprint(db.update('example.record', {'count': dynamo.Increment('count')}))
+# {'_updated': '2022-04-14T01:05:23.290422', 'count': Decimal('2')}
+pprint(db.update('example.record', {'count': dynamo.Increment('count', 8)}))
+# {'_updated': '2022-04-14T01:05:28.290422', 'count': Decimal('10')}
+
+pprint(db.update('example.record', {'count': dynamo.Decrement('count')}))
+# {'_updated': '2022-04-14T01:05:28.290422', 'count': Decimal('9')}
+pprint(db.update('example.record', {'count': dynamo.Decrement('count', 9)}))
+# {'_updated': '2022-04-14T01:05:28.290422', 'count': Decimal('0')}
 ```
 
+
+
+## Batch would work something like this
+
+```python
+
+from pynanite import dynamo
+
+db = dynamo.DB('youtubeclone.com')
+
+with db.batch() as batch:
+
+  batch.update("VIDEO.#VID_15464279", {
+    "video_id": "VID_15464279",
+    "Title": "How to make soup", 
+    "views": 0, 
+    "author": "ACC_15464279", 
+    "channel": "penny_makes_things"
+  })
+
+  batch.update("CHANNEL.#penny_makes_things", {"videos": Increment("videos")})
+
+
+  # FUTRUE 
+
+  # TODO: Would be nice to have a abort option to exit the with without sending anything
+  batch.abort()
+
+  # TODO: Might auto save batch when the with __exit__ is called, or maybe manually save it.
+  batch.save()
+
+```
 
 ## Modelling with AWS nosql work bench
 
@@ -298,9 +350,14 @@ create_nosql_workbench(filename="table.json")
 
 ## Advcanced Examples:
 
+TODO fill this out
+
 ```python
 
+# Its okay to use query on small partions, if its large then you might need to set up a gsi
 >>> db.query("123")
+
+# Scan should also most never be used
 >>> db.scan("123")
 
 ```
@@ -333,4 +390,67 @@ This library supports single table design, and nosql style data modeling.
 
 - Add a video showing examples, one thing I had trouble was finding dynamoDB example functions.
 
+- Have a local version that saves it in sqlite, AWS also have their own local version.
 
+
+
+```
+
+>>> db.
+db.PK              db.info(
+db.SK              db.put(
+db.delete(         db.records
+db.describe        db.scan(
+db.get(            db.status
+db.get_partition(  db.table
+db.help            db.update(
+
+
+>>> dynamo.
+describe_all(
+dynamo_connection(
+table_connection(
+list_tables(
+create_table(
+show_schema(
+show_partition(
+query(
+user_get_attrs(
+collect_expression(
+
+```
+
+
+
+```python
+
+
+```
+
+
+
+
+## Development
+
+
+```
+
+[Create a venv first]
+
+git clone https://github.com/xzava/pynamite.git
+cd pynamite
+
+python setup.py develop
+python setup.py develop pynamite[testing]
+
+pip install -r requirements_dev.txt
+
+
+python -m pytest
+
+
+python setup.py develop --uninstall
+
+
+python setup.py develop easy_install pynamite[testing]
+```

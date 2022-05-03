@@ -440,22 +440,3 @@ def _load_key_schema(key_schema):
 	return PK, SK
 
 
-def remove_meta(data, ignore=None):
-	""" Quick function to remove meta information from db.get() returns
-	"""
-	default_meta = [
-		'updated',
-		'updated_iso',
-		'created',
-		'created_iso',
-		'__updated',
-		'__updated_iso',
-		'__created',
-		'__created_iso',
-		'PK',
-		'SK'
-	]
-	ingore_list = default_meta + ignore if ignore else default_meta
-	if isinstance(data, list):
-		return [remove_keys(e, ingore_list) for e in data]
-	return remove_keys(data, ingore_list)

@@ -22,11 +22,6 @@ setup(name='pynamite',
       install_requires=['boto3', 'cachetools'],
       python_requires='>=3.8',
       extras_require={
-        'gpu': ["pyopencl", "six"],
-        'testing': [
-            "pytest",
-            "torch",
-            "tqdm",
-        ],
+        'testing': ["pytest"],
       },
       include_package_data=True)

@@ -21,3 +21,4 @@ pytest tests
 def test_serialize():
 	""" TEST: `serialize` from pynamite.type_serializer
 	"""
+	pass

@@ -7,7 +7,7 @@ TODO.md
 	[x] write readme
 	[x] ensure you can pip install - pip install git+https://github.com/xzava/pynamite.git --upgrade
 
-[ ] Write some simple tests
+[...] Write some simple tests
 
 [ ] Find areas that need more work
 	[ ] Increment/Decrement
@@ -25,9 +25,11 @@ TODO.md
 	[ ] .delete
 	[ ] .facet
 	[ ] .schema
-	[ ] .create_table
+	[x] .create_table
 	[ ] .create_gsi
 	[ ] .download
+	
+
 
 
 [ ] Create short video showing simple usecases 
