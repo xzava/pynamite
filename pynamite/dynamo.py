@@ -55,11 +55,11 @@ from pynamite.utils import function_name, display_changes_between_dicts, MyJSONE
 from pynamite.utils import error_name, error_message, timestamp, iso_time
 from pynamite.utils import remove_keys
 from pynamite.utils import first, second, get_index
-from pynamite.utils import convert_key, confirm_dialog, _load_key_schema, remove_meta
+from pynamite.utils import convert_key, confirm_dialog, _load_key_schema
 from pynamite.utils import debug
 
 
-from pynamite.utils import test_this
+# from pynamite.utils import test_this
 
 from pynamite import utils
 from pynamite import expression
@@ -138,6 +138,8 @@ https://github.com/serebrov/dynamo_objects
 # "Requested resource not found" -- Does this table exist?
 
 """
+
+
 	TODO: add advanced get for assuming `get_partition`
 	TODO: add support for queries
 	TODO: make async --> https://pypi.org/project/aioboto3/
