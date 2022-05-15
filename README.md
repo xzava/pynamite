@@ -56,10 +56,11 @@ Note: AWS looks in `~.aws` if no environment envs are supplied. This is where th
 ```sh
 # ~/aws_key_location.sh
 
+
 # REQUIRED..
-export AWS_ACCESS_KEY_ID='YOUR_KEY'
-export AWS_SECRET_ACCESS_KEY='YOUR_SECRET'
-export DEFAULT_REGION='us-east-1'
+export AWS_ACCESS_KEY_ID='XXXXXXX__YOUR_KEY__XXXXXXX' 
+export AWS_SECRET_ACCESS_KEY='xxxxxxxxxxx__YOUR_SECRET__xxxxxxxxxxxxxx'
+export AWS_DEFAULT_REGION='us-east-1'
 export DEBUG='development'
 
 # OPTIONAL..
