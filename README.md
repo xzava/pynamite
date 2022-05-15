@@ -3,9 +3,18 @@
 
 # Pynamite
 
-Pynamite is a dynamodb library is focusing on single table design, it keeps the basic boto3 interface, without the bloat.
+Pynamite is a python library for aws's dynamodb database.
 
-Dynamodb is a nosql database service by AWS. Its fast key/value store is highly scalable and ideal for read heavy databases when you know the access patterns.
+It aims to make your dynamo database as easy to use as a python dictionary.
+
+With single table design kept front and center, it keeps the basic boto3 interface, without the bloat.
+
+It provides helper functions to avoid dynamodb keyworks and the bloat that comes with `UpdateExpression`, `ExpressionAttributeValues`, `ExpressionAttributeNames` You don't even have to know what tehse things are anymore..
+
+What is dynamodb? Dynamodb is a nosql database service by AWS. 
+It is fast key/value store is highly scalable and ideal for read heavy databases when you have knwn access patterns.
+
+[AWS Dynamodb Database](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html)
 
 
 <p align="center">
