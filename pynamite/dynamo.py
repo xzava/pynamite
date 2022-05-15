@@ -266,6 +266,7 @@ class DB:
 		
 		self.PK, self.SK = utils._load_key_schema(self.table.key_schema) #> ("PK", "SK")
 		self.records = None #> Object to attach record schema
+		self.table_name = table_name
 		self.describe
 		debug(f'SUCCESS: connected to <Table name="{table_name}">')
 
@@ -317,7 +318,8 @@ class DB:
 		try:
 			kwargs["Key"] = convert_key(key, self.PK, self.SK)
 			if attrs:
-				kwargs = kwargs | expression.UpdateExpression()._ProjectionExpression(attrs)
+				kwargs = (kwargs or {}).update(expression.UpdateExpression()._ProjectionExpression(attrs))
+				# kwargs = kwargs | expression.UpdateExpression()._ProjectionExpression(attrs)
 				# response = self.table.get_item(Key=key, ProjectionExpression=attrs, ExpressionAttributeNames=ExpressionAttributeNames)
 				# response = self.table.get_item(Key=key, **name_mapping, **kwargs)
 			# else:
@@ -452,7 +454,8 @@ class DB:
 			# _attributes_to_update['_updated_iso'] = iso_time()
 
 		# expression_out = expression.update(_attributes_to_update)
-		kwargs = kwargs | expression.UpdateExpression().build(_attributes_to_update)
+		(kwargs or {}).update(expression.UpdateExpression().build(_attributes_to_update))
+		# kwargs = kwargs | expression.UpdateExpression().build(_attributes_to_update)
 
 		debug("\n")
 		debug("\n")
@@ -782,7 +785,7 @@ class DB:
 			NOTE: Above is confidentialised 
 		"""
 		if self._describe is None:
-			describe_table = self._dynamodb.meta.client.describe_table(TableName="USER")["Table"]
+			describe_table = self._dynamodb.meta.client.describe_table(TableName=self.table_name)["Table"]
 			self._describe = describe_table
 			debug("Running first time..", "")
 			return self._describe
@@ -852,7 +855,9 @@ def dynamo_connection(dynamodb=None):
 
 	dynamodb = boto3.resource('dynamodb',
 		aws_access_key_id=getenv('AWS_ACCESS_KEY_ID'),
-		aws_secret_access_key=getenv('AWS_SECRET_ACCESS_KEY')
+		aws_secret_access_key=getenv('AWS_SECRET_ACCESS_KEY'),
+		default_region=getenv('DEFAULT_REGION', 'us-east-1')
+
 	)
 	assert dynamodb, "No connection established with AWS.."
 	debug("", "This dynamodb account has the following tables..")

@@ -16,10 +16,40 @@ from pynamite import dynamo
 db = dynamo.DB('TEST_TABLE')
 
 
+""" 
+DB:
+  update(
+  get(
+  put(
+  delete(
+  get_partition(
+
+table_connection(_
+
+describe_all()
+dynamo_connection()
+table_connection()
+list_tables()
+create_table()
+show_schema()
+show_partition()
+query()
+user_get_attrs()
+collect_expression()
+
+
+"""
+
+
 def test_get():
 	""" TEST:
 	"""
 	db.get()
+
+def test_get():
+	""" TEST:
+	"""
+	db.get_partition()
 
 
 def test_update():

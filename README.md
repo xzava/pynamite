@@ -1,7 +1,7 @@
 > README.md
 
 
-# PYNAMITE: Python dynamoDB library
+# Pynamite
 
 Pynamite is a dynamodb library is focusing on single table design, it keeps the basic boto3 interface, without the bloat.
 
@@ -36,18 +36,19 @@ python setup.py develop
 
 Next, set up credentials (in e.g. ~/.aws_key_location):
 
+[Setting Up DynamoDB (AWS)](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/SettingUp.DynamoWebService.html)
+
 ```sh
 # ~/aws_key_location.sh
 
 # REQUIRED..
 export AWS_ACCESS_KEY_ID='YOUR_KEY'
 export AWS_SECRET_ACCESS_KEY='YOUR_SECRET'
-export DYNAMO_REGION='YOUR REGION'
+export DEFAULT_REGION='us-east-1'
 export DEBUG='development'
 
 # OPTIONAL..
 export DYNAMO_TABLE_NAME='TABLE_NAME' 
-export region='us-east-1'
 
 ```
 
