@@ -9,7 +9,7 @@ It aims to make your dynamo database as easy to use as a python dictionary.
 
 With single table design kept front and center, it keeps the basic boto3 interface, without the bloat.
 
-It provides helper functions to avoid dynamodb keyworks and the bloat that comes with `UpdateExpression`, `ExpressionAttributeValues`, `ExpressionAttributeNames` You don't even have to know what tehse things are anymore..
+It provides magic to autoencode keys and values to avoid dynamodb keywords and the bloat that comes with `UpdateExpression`, `ExpressionAttributeValues`, `ExpressionAttributeNames`, so you don't even have to know what tehse things are anymore..
 
 What is dynamodb? Dynamodb is a nosql database service by AWS. 
 It is fast key/value store is highly scalable and ideal for read heavy databases when you have knwn access patterns.
@@ -20,7 +20,6 @@ It is fast key/value store is highly scalable and ideal for read heavy databases
 <p align="center">
   <img src="https://raw.githubusercontent.com/xzava/pynamite/main/docs/images/wile.png">
 </p>
-
 
 
 ## Project status - Alpha (as of 2nd May 2022)
@@ -66,6 +65,7 @@ export DEBUG='development'
 # OPTIONAL..
 export DYNAMO_TABLE_NAME='TABLE_NAME' 
 
+echo "SUCCESS: AWS KEYS HAVE BEEN LOADED"
 ```
 
 ```bash
@@ -76,7 +76,7 @@ Note: Set the DEBUG env to 'development' to show verbose messages.
 
 ### QUICK EXAMPLE
 
-##### Bookmark Datamodel
+##### Create a Bookmark Datamodel
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/xzava/pynamite/main/docs/images/bookmarks_data_model.png">
@@ -151,7 +151,7 @@ Open the above image in a new tab for the full size.
 ```
 
 
-#### Note: 
+#### Note: How dynamodb filters work relating to cost and speed
 
 The last example `db.get("321.CUST#321", "userPreferences.gpsLocation")` you are requesting a filter from AWS.
 They process this filter on all data found matching the lookup `321.CUST#321`
@@ -166,13 +166,21 @@ This datamodel the "SK" should ideally be `URL#https://aws.amazon.com` rather th
 So a user can query all bookmarks from a user in one command, ie get all records for user "123" with a sort key that starts with "URL#" 
 
 
-### USAGE
+### Example 2
 
-##### Datamodel for a cloud video service
+##### Create a Datamodel for a cloud video service
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/xzava/pynamite/main/docs/images/youtubeclone_data_model.png">
 </p>
+
+
+- Two users create an account
+- A user creates a channel
+- A user verified their email
+- A user creates a video on their channel
+- They some views and subscribers
+
 
 ```python
 >>> from pynamite import dynamo
@@ -318,7 +326,7 @@ pprint(db.update('example.record', {'count': dynamo.Decrement('count', 9)}))
 
 
 
-## Batch would work something like this
+## Batch would work something like this [Coming soon]
 
 ```python
 
@@ -339,7 +347,7 @@ with db.batch() as batch:
   batch.update("CHANNEL.#penny_makes_things", {"videos": Increment("videos")})
 
 
-  # FUTRUE 
+  # FUTRUE PIPE LINE
 
   # TODO: Would be nice to have a abort option to exit the with without sending anything
   batch.abort()
@@ -359,6 +367,8 @@ with db.batch() as batch:
 ```python
 
 
+ # FUTRUE PIPE LINE
+
 create_nosql_workbench(filename="table.json")
 
 
@@ -366,16 +376,16 @@ create_nosql_workbench(filename="table.json")
 
 
 
-## Advcanced Examples:
+## Advanced Examples:
 
-TODO fill this out
+TODO: fill this out
 
 ```python
 
-# Its okay to use query on small partions, if its large then you might need to set up a gsi
+# Its okay to use query on small partions, if its large then you might need to set up a gsi (Global Secondary Index)
 >>> db.query("123")
 
-# Scan should also most never be used
+# Scan should never be used, you are attemping to read every single item in your database. (very expensive if used in production)
 >>> db.scan("123")
 
 ```
