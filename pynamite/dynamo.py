@@ -856,7 +856,7 @@ def dynamo_connection(dynamodb=None):
 	dynamodb = boto3.resource('dynamodb',
 		aws_access_key_id=getenv('AWS_ACCESS_KEY_ID'),
 		aws_secret_access_key=getenv('AWS_SECRET_ACCESS_KEY'),
-		default_region=getenv('AWS_DEFAULT_REGION', 'us-east-1')
+		region_name=getenv('AWS_REGION_NAME', getenv('AWS_DEFAULT_REGION', 'us-east-1'))
 	)
 	assert dynamodb, "No connection established with AWS.."
 	debug("", "This dynamodb account has the following tables..")
