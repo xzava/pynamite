@@ -83,3 +83,16 @@ Should be the following
 But is currently this 
 
 'SET #7513818127 = :SR_1707883424 #7513818127'
+
+
+
+------------
+------------
+------------
+------------
+
+
+`DATE`: 16.05.22 
+`PROBLEM`: User had a problem installing
+`STAUS`: Fixed [Untested]
+`DETAILS`: Changed the problems, might require an extra install to install things from github. Need to check on a fresh linux 

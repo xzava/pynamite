@@ -24,7 +24,11 @@ Help improve this project with your feedback.
 ### Installation
 
 ```bash
+# from github
 pip install git+https://github.com/xzava/pynamite.git --upgrade
+
+# from pypi.org (Coming soon)
+# pip install pynamite
 
 # or for development
 git clone https://github.com/xzava/pynamite.git
@@ -37,6 +41,8 @@ python setup.py develop
 Next, set up credentials (in e.g. ~/.aws_key_location):
 
 [Setting Up DynamoDB (AWS)](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/SettingUp.DynamoWebService.html)
+
+Note: AWS looks in `~.aws` if no environment envs are supplied. This is where the aws cli tool saves credentials
 
 ```sh
 # ~/aws_key_location.sh
@@ -169,7 +175,8 @@ So a user can query all bookmarks from a user in one command, ie get all records
 >>> db.update(["USER", "#ACTIVE#ACC_45438981"], {"firstname": "John", "email": "john@example.com", "verified": True})
 >>> db.update(["USER", "#ACTIVE#ACC_15464279"], {"firstname": "Penny", "email": "penny@example.com", "verified": False})
 
-# Get a user
+# Get a user 
+# dot symbol seperates PK form SK and hash symbol is potentional search terms for the SK (Sort Key)
 >>> db.get("USER.#ACTIVE#ACC_45438981")
 {
 	"PK": "USER",
