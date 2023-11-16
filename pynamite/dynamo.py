@@ -263,6 +263,7 @@ class DB:
 
 		self._dynamodb = dynamo_connection()
 		self.table = table_connection(self._dynamodb, table_name)
+		self.tenant = tenant #> tenant should not contain '.' this will break convert_key
 		
 		self.PK, self.SK = utils._load_key_schema(self.table.key_schema) #> ("PK", "SK")
 		self.records = None #> Object to attach record schema
@@ -1030,6 +1031,9 @@ def show_schema(db):
 			  https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/images/tabledesign.png
 	"""
 	#bug: This does a scan when debug is off, without showing warning message.
+	if db.tenant:
+		print("show_schema: disabled for tenant table")
+
 	if (getenv("DEBUG") or "").lower() in ["1", 1, "true", "debug", "development"]:
 		debug("WARNING: return value can be very large, this function is only meant for debugging.")
 		data = db.table.scan(ProjectionExpression="PK, SK")['Items']
@@ -1059,6 +1063,9 @@ def show_partition(db, count=True):
 		REQUIRES:
 			from collections import Counter
 	"""
+	if db.tenant:
+		print("show_partition: disabled for tenant table")
+
 	if isinstance(db, DB):
 		data = db.table.scan(ProjectionExpression="PK")['Items']
 	else:
