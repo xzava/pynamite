@@ -256,7 +256,7 @@ class DB:
 			>>> from pynamite import dynamo;db = dynamo.DB('USER')
 			>>> import importlib;importlib.reload(dynamo);db = dynamo.DB('USER')
 	"""
-	def __init__(self, table_name=None, pk='PK', sk='SK'):
+	def __init__(self, table_name=None, pk='PK', sk='SK', tenant=None):
 		debug(f'Connecting to dynamo <Table name="{table_name}">\n')
 		self._describe = None
 		self._schema = None
@@ -317,6 +317,8 @@ class DB:
 		# assert key, "arg missing, Expecting a PK and SK ie --> key={'PK':'USER', 'SK':'#PROFILE#M74244398'}"
 		try:
 			kwargs["Key"] = convert_key(key, self.PK, self.SK)
+			if self.tenant:
+				kwargs["Key"][self.PK] = self.tenant + "@" + kwargs["Key"][self.PK]
 			if attrs:
 				kwargs = (kwargs or {}).update(expression.UpdateExpression()._ProjectionExpression(attrs))
 				# kwargs = kwargs | expression.UpdateExpression()._ProjectionExpression(attrs)
@@ -442,6 +444,8 @@ class DB:
 
 		kwargs.setdefault("ReturnValues", getenv("RETURN_VALUES", RETURN_VALUES))
 		kwargs["Key"] = convert_key(key, self.PK, self.SK)
+		if self.tenant:
+			kwargs["Key"][self.PK] = self.tenant + "@" + kwargs["Key"][self.PK]
 
 		# assert key, "key needs to be supplied ie {'PK': 'USER', 'SK': '#PROFILE#M742443980'}"
 		# assert attributes_to_update, 'attributes_to_update can not be empty or None'
@@ -561,6 +565,9 @@ class DB:
 		key = convert_key(key, self.PK, self.SK)
 		# debug(f"key: {key}") #> {'PK': 'magic', 'SK': 'one'}
 		# debug(f"data: {data}") #> {'item': '8', 'HELLO': 'HELLO'}
+
+		if self.tenant:
+			key[self.PK] = self.tenant + "@" + key[self.PK]
 		
 		# assert isinstance(key, dict), "Key needs to be type dict."
 		assert isinstance(data, dict), "data needs to be type dict."
@@ -658,6 +665,8 @@ class DB:
 
 		"""
 		key = convert_key(key, self.PK, self.SK)
+		if self.tenant:
+			key[self.PK] = self.tenant + "@" + key[self.PK]
 		assert isinstance(key, dict), "Key needs to be type dict."
 		try:
 			# Example with no conditions, will delete item if found.
@@ -731,9 +740,9 @@ class DB:
 
 		https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb.html#DynamoDB.Client.scan
 		"""
-		debug("", 'WARNING: This function is returning/reading a full database record (expensive).')
+		print("", 'WARNING: This function is returning/reading a full database record (expensive).')
 		if confirm is False:
-			debug('Please confirm: use db.scan(confirm=True)')
+			print('Please confirm: use db.scan(confirm=True)')
 			return None
 
 		try:
@@ -1020,11 +1029,16 @@ def show_schema(db):
 		TODO: I would like it to show a grid view overview of all keys for each similar to this
 			  https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/images/tabledesign.png
 	"""
-	debug("WARNING: return value can be very large, this function is only meant for debugging.")
-	data = db.table.scan(ProjectionExpression="PK, SK")['Items']
-	out = defaultdict(list)
-	[out[e['PK']].append(e["SK"]) for e in data]
-	return debug(dict(out))
+	#bug: This does a scan when debug is off, without showing warning message.
+	if (getenv("DEBUG") or "").lower() in ["1", 1, "true", "debug", "development"]:
+		debug("WARNING: return value can be very large, this function is only meant for debugging.")
+		data = db.table.scan(ProjectionExpression="PK, SK")['Items']
+		out = defaultdict(list)
+		[out[e['PK']].append(e["SK"]) for e in data]
+		return debug(dict(out))
+	
+	print("show_schema: can only be used during DEBUG as db.table.scan is used.")
+
 
 
 def show_partition(db, count=True):
