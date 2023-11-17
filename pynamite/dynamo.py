@@ -698,15 +698,12 @@ class DB:
 		return _default
 
 
-	def get_partition(self, pk, startswith=None, contains=None, SortCondition=None,_default=None, **kwargs):
+	def get_partition(self, pk, startswith=None, SortCondition=None,_default=None, **kwargs):
 		""" Get all records in a partition_key
 			
 			EXAMPLE:
 				>>> db.get_partition("House")
 				>>> db.get_partition("House", startswith="#FOR_SALE")
-				>>> db.get_partition("House", contains="#2021-03")
-				>>> db.get_partition("House", startswith="#SOLD", contains="#2021-03")
-				>>> db.get_partition("House", startswith="#SOLD", contains="#AUK#2021-03")
 				>>> db.get_partition("House", SortCondition=Key('SK').between('#DEACTIVE#2021-03-01 00:00:00', '#DEACTIVE#2021-03-31 23:59:59'))
 		"""
 		if self.tenant:
@@ -718,17 +715,9 @@ class DB:
 						KeyConditionExpression=Key(self.PK).eq(pk) & SortCondition
 				)
 			else:
-				if startswith and contains is None:
+				if startswith:
 					response = self.table.query(
 						KeyConditionExpression=Key(self.PK).eq(pk) & Key(self.SK).begins_with(startswith)
-					)
-				elif startswith is None and contains:
-					response = self.table.query(
-						KeyConditionExpression=Key(self.PK).eq(pk) & Key(self.SK).contains(startswith)
-					)
-				elif startswith and contains:
-					response = self.table.query(
-						KeyConditionExpression=Key(self.PK).eq(pk) & Key(self.SK).begins_with(startswith) & Key(self.SK).contains(startswith)
 					)
 				else:
 					response = self.table.query(
